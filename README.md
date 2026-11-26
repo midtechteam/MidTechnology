@@ -290,5 +290,3 @@ npm run tauri build
 MIT License — see LICENSE file for details.
 
 # MidTechnology
-#   M i d T e c h n o l o g y  
- 
