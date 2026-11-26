@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Canvas cursor overrides */
+.canvas-select { cursor: default; }
+.canvas-draw { cursor: crosshair; }
+.canvas-pan { cursor: grab; }
+.canvas-panning { cursor: grabbing; }
+.canvas-resize-nw { cursor: nw-resize; }
+.canvas-resize-ne { cursor: ne-resize; }
+.canvas-resize-se { cursor: se-resize; }
+.canvas-resize-sw { cursor: sw-resize; }
+.canvas-resize-n { cursor: n-resize; }
+.canvas-resize-e { cursor: e-resize; }
+.canvas-resize-s { cursor: s-resize; }
+.canvas-resize-w { cursor: w-resize; }
+
+/* Editor layout */
+.editor-layout {
+  display: grid;
+  grid-template-areas:
+    "topbar topbar topbar"
+    "left-panel canvas right-panel";
+  grid-template-rows: 48px 1fr;
+  grid-template-columns: 240px 1fr 260px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .editor-layout {
+    grid-template-areas:
+      "topbar"
+      "canvas";
+    grid-template-rows: 48px 1fr;
+    grid-template-columns: 1fr;
+  }
+  .editor-left-panel, .editor-right-panel {
+    display: none;
+  }
+}
+
+/* Sidebar */
+.sidebar-nav-item {
+  @apply flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 cursor-pointer transition-colors duration-150;
+}
+.sidebar-nav-item.active {
+  @apply text-scafbind-purple bg-scafbind-purple-light;
+}
+
+/* Selection box */
+.selection-box {
+  position: absolute;
+  border: 1.5px solid #7C3AED;
+  background: rgba(124, 58, 237, 0.05);
+  pointer-events: none;
+}
+
+/* Toolbar item */
+.tool-btn {
+  @apply flex items-center justify-center w-8 h-8 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 cursor-pointer transition-colors;
+}
+.tool-btn.active {
+  @apply text-scafbind-purple bg-scafbind-purple-light;
+}

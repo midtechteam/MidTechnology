@@ -1,0 +1,396 @@
+import React from 'react';
+import { generateId } from '@/lib/utils';
+import {
+  Square,
+  Circle,
+  Triangle,
+  Minus,
+  ArrowRight,
+  Spline,
+  Type,
+  Image as ImageIcon,
+  Video,
+  Film,
+  Layout,
+  Columns,
+  Rows,
+  SplitSquareHorizontal,
+  TextCursor,
+  CheckSquare,
+  ToggleLeft,
+} from 'lucide-react';
+
+export interface ToolItem {
+  id: string;
+  label: string;
+  shortcut?: string;
+  icon: React.ReactNode;
+  category: 'shapes' | 'text' | 'layout' | 'ui';
+  action?: 'tool' | 'insert';
+  description?: string;
+  createElement?: (artboardWidth: number, artboardHeight: number, x?: number, y?: number) => any;
+}
+
+export const SHAPE_TOOLS: ToolItem[] = [
+  {
+    id: 'rect',
+    label: 'Rectangle',
+    shortcut: 'R',
+    category: 'shapes',
+    action: 'tool',
+    icon: <Square size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'rounded-rect',
+    label: 'Rounded Rectangle',
+    category: 'shapes',
+    action: 'tool',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="6" />
+      </svg>
+    ),
+  },
+  {
+    id: 'ellipse',
+    label: 'Ellipse',
+    shortcut: 'O',
+    category: 'shapes',
+    action: 'tool',
+    icon: <Circle size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'triangle',
+    label: 'Triangle',
+    category: 'shapes',
+    action: 'tool',
+    icon: <Triangle size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'line',
+    label: 'Line',
+    shortcut: 'L',
+    category: 'shapes',
+    action: 'tool',
+    icon: <Minus size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'arrow',
+    label: 'Arrow',
+    category: 'shapes',
+    action: 'tool',
+    icon: <ArrowRight size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'connector',
+    label: 'Flexible Connector',
+    shortcut: 'C',
+    category: 'shapes',
+    action: 'tool',
+    icon: <Spline size={16} strokeWidth={2} />,
+    description: 'Draw flexible connector with editable points and curves',
+  },
+];
+
+export const TEXT_MEDIA_TOOLS: ToolItem[] = [
+  {
+    id: 'text',
+    label: 'Text',
+    shortcut: 'T',
+    category: 'text',
+    action: 'tool',
+    icon: <Type size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'image',
+    label: 'Image',
+    category: 'text',
+    action: 'tool',
+    icon: <ImageIcon size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'video',
+    label: 'Video',
+    category: 'text',
+    action: 'tool',
+    icon: <Video size={16} strokeWidth={2} />,
+  },
+  {
+    id: 'media',
+    label: 'Media Player',
+    category: 'text',
+    action: 'insert',
+    icon: <Film size={16} strokeWidth={2} />,
+    createElement: (_w, _h, x = 100, y = 100) => ({
+      id: generateId(),
+      type: 'image',
+      name: 'Media Player',
+      x,
+      y,
+      width: 480,
+      height: 270,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#1E1E24',
+      stroke: '#7C3AED',
+      strokeWidth: 1,
+      cornerRadius: 12,
+    }),
+  },
+];
+
+export const LAYOUT_TOOLS: ToolItem[] = [
+  {
+    id: 'layout-header',
+    label: 'Header + Body',
+    category: 'layout',
+    action: 'insert',
+    icon: <Layout size={16} strokeWidth={2} />,
+    description: 'Header navigation area with body content section',
+    createElement: (w = 1440, _h, x = 40, y = 40) => ({
+      id: generateId(),
+      type: 'sectionSplitter',
+      name: 'Header + Body Layout',
+      x,
+      y,
+      width: Math.min(Math.max(600, w - 80), 1100),
+      height: 480,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#FFFFFF',
+      stroke: '#E5E7EB',
+      strokeWidth: 1,
+      cornerRadius: 8,
+      splitDirection: 'vertical',
+      sections: [
+        { id: generateId(), proportion: 1, background: '#F8FAFC', elements: [] },
+        { id: generateId(), proportion: 5, background: '#FFFFFF', elements: [] },
+      ],
+      spacing: 8,
+    }),
+  },
+  {
+    id: 'layout-2col',
+    label: '2-Column Grid',
+    category: 'layout',
+    action: 'insert',
+    icon: <Columns size={16} strokeWidth={2} />,
+    description: 'Evenly balanced two-column content division',
+    createElement: (w = 1440, _h, x = 60, y = 60) => ({
+      id: generateId(),
+      type: 'sectionSplitter',
+      name: '2-Column Grid',
+      x,
+      y,
+      width: Math.min(Math.max(400, w - 120), 800),
+      height: 380,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#FFFFFF',
+      stroke: '#E5E7EB',
+      strokeWidth: 1,
+      cornerRadius: 8,
+      splitDirection: 'horizontal',
+      sections: [
+        { id: generateId(), proportion: 1, background: '#FFFFFF', elements: [] },
+        { id: generateId(), proportion: 1, background: '#F9FAFB', elements: [] },
+      ],
+      spacing: 12,
+    }),
+  },
+  {
+    id: 'layout-3col',
+    label: '3-Column Grid',
+    category: 'layout',
+    action: 'insert',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="5" height="18" rx="1" />
+        <rect x="10" y="3" width="5" height="18" rx="1" />
+        <rect x="17" y="3" width="5" height="18" rx="1" />
+      </svg>
+    ),
+    description: 'Three-column responsive content container',
+    createElement: (w = 1440, _h, x = 60, y = 60) => ({
+      id: generateId(),
+      type: 'sectionSplitter',
+      name: '3-Column Grid',
+      x,
+      y,
+      width: Math.min(Math.max(600, w - 120), 960),
+      height: 340,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#FFFFFF',
+      stroke: '#E5E7EB',
+      strokeWidth: 1,
+      cornerRadius: 8,
+      splitDirection: 'horizontal',
+      sections: [
+        { id: generateId(), proportion: 1, background: '#FFFFFF', elements: [] },
+        { id: generateId(), proportion: 1, background: '#F9FAFB', elements: [] },
+        { id: generateId(), proportion: 1, background: '#FFFFFF', elements: [] },
+      ],
+      spacing: 12,
+    }),
+  },
+  {
+    id: 'layout-rows',
+    label: 'Rows Stack',
+    category: 'layout',
+    action: 'insert',
+    icon: <Rows size={16} strokeWidth={2} />,
+    description: 'Vertical stack of structured rows',
+    createElement: (w = 1440, _h, x = 60, y = 60) => ({
+      id: generateId(),
+      type: 'sectionSplitter',
+      name: 'Rows Stack',
+      x,
+      y,
+      width: Math.min(Math.max(400, w - 160), 720),
+      height: 420,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#FFFFFF',
+      stroke: '#E5E7EB',
+      strokeWidth: 1,
+      cornerRadius: 8,
+      splitDirection: 'vertical',
+      sections: [
+        { id: generateId(), proportion: 1, background: '#FFFFFF', elements: [] },
+        { id: generateId(), proportion: 1, background: '#F9FAFB', elements: [] },
+        { id: generateId(), proportion: 1, background: '#FFFFFF', elements: [] },
+      ],
+      spacing: 10,
+    }),
+  },
+  {
+    id: 'section-splitter',
+    label: 'Section Splitter',
+    category: 'layout',
+    action: 'tool',
+    icon: <SplitSquareHorizontal size={16} strokeWidth={2} />,
+    description: 'Custom division modal with columns/rows and gaps',
+  },
+];
+
+export const UI_COMPONENTS: ToolItem[] = [
+  {
+    id: 'comp_button',
+    label: 'Button',
+    category: 'ui',
+    action: 'insert',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="7" width="18" height="10" rx="5" />
+        <line x1="8" y1="12" x2="16" y2="12" />
+      </svg>
+    ),
+    createElement: (_w, _h, x = 120, y = 120) => ({
+      id: generateId(),
+      type: 'rect',
+      name: 'Primary Button',
+      x,
+      y,
+      width: 140,
+      height: 44,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#7C3AED',
+      stroke: '#6D28D9',
+      strokeWidth: 0,
+      cornerRadius: 8,
+    }),
+  },
+  {
+    id: 'comp_input',
+    label: 'Input Field',
+    category: 'ui',
+    action: 'insert',
+    icon: <TextCursor size={16} strokeWidth={2} />,
+    createElement: (_w, _h, x = 120, y = 180) => ({
+      id: generateId(),
+      type: 'rect',
+      name: 'Input Field',
+      x,
+      y,
+      width: 280,
+      height: 42,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#FFFFFF',
+      stroke: '#D1D5DB',
+      strokeWidth: 1,
+      cornerRadius: 6,
+    }),
+  },
+  {
+    id: 'comp_checkbox',
+    label: 'Checkbox',
+    category: 'ui',
+    action: 'insert',
+    icon: <CheckSquare size={16} strokeWidth={2} />,
+    createElement: (_w, _h, x = 120, y = 240) => ({
+      id: generateId(),
+      type: 'rect',
+      name: 'Checkbox',
+      x,
+      y,
+      width: 20,
+      height: 20,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#7C3AED',
+      stroke: '#6D28D9',
+      strokeWidth: 0,
+      cornerRadius: 4,
+    }),
+  },
+  {
+    id: 'comp_toggle',
+    label: 'Toggle Switch',
+    category: 'ui',
+    action: 'insert',
+    icon: <ToggleLeft size={16} strokeWidth={2} />,
+    createElement: (_w, _h, x = 120, y = 280) => ({
+      id: generateId(),
+      type: 'rect',
+      name: 'Toggle Switch',
+      x,
+      y,
+      width: 44,
+      height: 24,
+      rotation: 0,
+      opacity: 100,
+      visible: true,
+      locked: false,
+      fill: '#7C3AED',
+      stroke: '#6D28D9',
+      strokeWidth: 0,
+      cornerRadius: 12,
+    }),
+  },
+];
+
+export const ALL_TOOLS = [
+  ...SHAPE_TOOLS,
+  ...TEXT_MEDIA_TOOLS,
+  ...LAYOUT_TOOLS,
+  ...UI_COMPONENTS,
+];
